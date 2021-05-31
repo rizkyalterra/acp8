@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"acp8/libs/database"
+	"acp8/middlewares"
 	"acp8/models"
 	"net/http"
 
@@ -44,11 +45,32 @@ func RegisterControllers(c echo.Context) error {
 		})
 	}
 
+	dataUserDB := data.(models.User)
+	token, err := middlewares.GenerateJWT(int(dataUserDB.ID))
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    500,
+			"status":  "error",
+			"message": "Failed generate token",
+			"data":    nil,
+		})
+	}
+
+	userResponse := models.UserResponse{
+		dataUserDB.ID,
+		dataUserDB.CreatedAt,
+		dataUserDB.UpdatedAt,
+		dataUserDB.Name,
+		dataUserDB.Email,
+		token,
+	}
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"code":    200,
 		"status":  "success",
 		"message": "Success insert data user",
-		"data":    data,
+		"data":    userResponse,
 	})
 }
 
