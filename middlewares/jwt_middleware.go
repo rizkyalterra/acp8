@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/labstack/echo"
 )
 
 func GenerateJWT(userId int) (string, error) {
@@ -20,4 +21,14 @@ func GenerateJWT(userId int) (string, error) {
 
 	// kunci
 	return token.SignedString([]byte(constants.SECRET_JWT))
+}
+
+func ExtractJWTToUserId(e echo.Context) int {
+	user := e.Get("user").(*jwt.Token)
+	if user.Valid {
+		claims := user.Claims.(jwt.MapClaims)
+		userId := claims["userId"].(float64)
+		return int(userId)
+	}
+	return 0
 }

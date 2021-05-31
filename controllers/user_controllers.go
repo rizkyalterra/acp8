@@ -22,8 +22,11 @@ func GetUserControllers(c echo.Context) error {
 		})
 	}
 
+	// userId
+	userId := middlewares.ExtractJWTToUserId(c)
+
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"code":    200,
+		"userId":  userId,
 		"status":  "success",
 		"message": "Success get data user",
 		"data":    data,
