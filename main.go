@@ -1,11 +1,13 @@
 package main
 
 import (
-	"fmt"
+	"acp8/configs"
+	"acp8/routes"
 )
 
 func main() {
-	fmt.Println("Hello world 8 7")
-	fmt.Println("Hello world 8 0")
-	fmt.Println("Hello world Fitur A")
+	configs.InitDB()
+	configs.InitMigrate()
+	e := routes.New()
+	e.Logger.Fatal(e.Start(":8000"))
 }
